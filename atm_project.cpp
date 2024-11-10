@@ -1,215 +1,197 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <unistd.h>  // For Linux
-// #include <windows.h>  // Uncomment this line for Windows users and comment out 'unistd.h'
-
+#include<conio.h>
+#include<iostream>
+#include<string>
 using namespace std;
 
-class ATM {
-private:
-    long int account_No;
-    string name;
-    int PIN;
-    double balance;
-    string mobile_No;
-    vector<string> transactionHistory;
-    bool isLocked = false;
-    int pinAttempts = 0;
 
-public:
-    void setData(long int account_No_a, string name_a, int PIN_a, double balance_a, string mobile_No_a) {
-        account_No = account_No_a;
-        name = name_a;
-        PIN = PIN_a;
-        balance = balance_a;
-        mobile_No = mobile_No_a;
-    }
+class atm										// class atm 
+{
+private:										// private member varibles
+	long int account_No;
+	string name;
+	int PIN;
+	double balance;
+	string mobile_No;
 
-    long int getAccountNo() { return account_No; }
-    string getName() { return name; }
-    int getPIN() { return PIN; }
-    double getBalance() { return balance; }
-    string getMobileNo() { return mobile_No; }
-    vector<string> getTransactionHistory() { return transactionHistory; }
-    bool getLockStatus() { return isLocked; }
+public:											// public member functions
 
-    void setMobile(string mob_prev, string mob_new) {
-        if (mob_prev == mobile_No) {
-            mobile_No = mob_new;
-            cout << endl << "Successfully Updated Mobile no.";
-            getchar();
-        } else {
-            cout << endl << "Incorrect Old Mobile no!";
-            getchar();
-        }
-    }
+	// setData function is setting the Data into the private member variables
+	void setData(long int account_No_a, string name_a, int PIN_a, double balance_a, string mobile_No_a)
+	{
+		account_No = account_No_a;	 // assigning the formal arguments to the private member var's
+		name = name_a;
+		PIN = PIN_a;
+		balance = balance_a;
+		mobile_No = mobile_No_a;
+	}
 
-    void cashWithDraw(int amount_a) {
-        if (amount_a > 0 && amount_a <= balance && amount_a <= 20000) {  // Added the withdrawal limit condition
-            balance -= amount_a;
-            string transaction = "Withdrew: " + to_string(amount_a);
-            transactionHistory.push_back(transaction);
-            cout << endl << "Please Collect Your Cash";
-            cout << endl << "Available Balance: " << balance;
-            getchar();
-        } else if (amount_a > 20000) {
-            cout << endl << "Withdrawal limit exceeded! You can only withdraw up to 20000.";
-            getchar();
-        } else {
-            cout << endl << "Invalid Input or Insufficient Balance";
-            getchar();
-        }
-    }
+	//getAccountNo function is returning the user's account no.
+	long int getAccountNo()
+	{
+		return account_No;
+	}
 
-    void lockAccount() {
-        isLocked = true;
-        cout << endl << "Your account has been locked due to multiple incorrect attempts." << endl;
-        getchar();
-    }
+	//getName function is returning the user's Name
+	string getName()
+	{
+		return name;
+	}
 
-    void trackPinAttempts() {
-        pinAttempts++;
-        if (pinAttempts >= 3) {
-            lockAccount();
-        }
-    }
+	//getPIN function is returning the user's PIN
+	int getPIN()
+	{
+		return PIN;
+	}
 
-    void resetPinAttempts() {
-        pinAttempts = 0;
-    }
+	//getBalance is returning the user's Bank Balance
+	double getBalance()
+	{
+		return balance;
+	}
 
-    void unlockAccount() {
-        isLocked = false;
-        pinAttempts = 0;
-        cout << endl << "Your account has been unlocked. Please try again with correct details.";
-        getchar();
-    }
+	//getMobileNo is returning the user's Mobile No.
+	string getMobileNo()
+	{
+		return mobile_No;
+	}
+
+	//setMobile function is Updating the user mobile no
+	void setMobile(string mob_prev, string mob_new)
+	{
+		if (mob_prev == mobile_No)						// it will check old Mobile no
+		{
+			mobile_No = mob_new;						// and Update with new, if old matches
+			cout << endl << "Sucessfully Updated Mobile no.";
+			_getch();				//getch is to hold the screen untill user press any key 																			
+		}
+
+		else							// Does not update if old mobile no. does not matches
+		{
+			cout << endl << "Incorrect !!! Old Mobile no";
+			_getch();			  
+		}
+	}
+
+	//cashWithDraw function is used to withdraw money from ATM
+	void cashWithDraw(int amount_a)
+	{
+		if (amount_a > 0 && amount_a < balance)		// check entered amount validity
+		{
+			balance -= amount_a;		// balance = balance - amount_a
+			cout << endl << "Please Collect Your Cash";
+			cout << endl << "Available Balance :" << balance;
+			_getch();				
+		}
+
+		else
+		{
+			cout << endl << "Invalid Input or Insufficient Balance";
+			_getch();				
+		}
+	}
+
 };
 
-int main() {
-    int choice = 0, enterPIN;
-    long int enterAccountNo;
+int main()
+{
+	int choice = 0, enterPIN;		//enterPIN and enterAccountNo. ---> user authentication
+	long int enterAccountNo;
 
-    system("clear");
+	system("cls");
 
-    ATM user1;
-    user1.setData(987654321, "Hardik", 1234, 50000, "9370054900");
+	// created User ( object )
+	atm user1;
+	// Set User Details ( into object )         ( Setting Default Data )
+	user1.setData(987654321, "Hardik", 1234, 50000, "9370054900");
 
-    do {
-        system("clear");
 
-        cout << endl << "****Welcome to ATM*****" << endl;
-        cout << endl << "Enter Your Account No: ";
-        cin >> enterAccountNo;
+	do
+	{
+		system("cls");
 
-        cout << endl << "Enter PIN: ";
-        cin >> enterPIN;
+		cout << endl << "****Welcome to ATM*****" << endl;
+		cout << endl << "Enter Your Account No ";	  // asking user to enter account no
+		cin >> enterAccountNo;
 
-        if ((enterAccountNo == user1.getAccountNo()) && (enterPIN == user1.getPIN())) {
-            user1.resetPinAttempts();
+		cout << endl << "Enter PIN ";				 // asking user to enter PIN
+		cin >> enterPIN;
 
-            do {
-                int amount = 0;
-                string oldMobileNo, newMobileNo;
 
-                if (user1.getLockStatus()) {
-                    cout << "Account is locked. Please contact support." << endl;
-                    break;
-                }
 
-                system("clear");
+		// check whether enter values matches with user details
+		if ((enterAccountNo == user1.getAccountNo()) && (enterPIN == user1.getPIN()))
+		{
+			do
+			{
+				int amount = 0;
+				string oldMobileNo, newMobileNo;
 
-                cout << endl << "**** Welcome to ATM *****" << endl;
-                cout << endl << "Select an option: ";
-                cout << endl << "1. Check Balance";
-                cout << endl << "2. Cash Withdraw";
-                cout << endl << "3. Show User Details";
-                cout << endl << "4. Update Mobile No.";
-                cout << endl << "5. View Transaction History";
-                cout << endl << "6. Lock Account (for security purposes)";
-                cout << endl << "7. Exit" << endl;
-                cin >> choice;
+				system("cls");
+			
+				cout << endl << "**** Welcome to ATM *****" << endl;
+				cout << endl << "Select Options ";
+				cout << endl << "1. Check Balance";
+				cout << endl << "2. Cash withdraw";
+				cout << endl << "3. Show User Details";
+				cout << endl << "4. Update Mobile no.";
+				cout << endl << "5. Exit" << endl;
+				cin >> choice;						
 
-                switch (choice) {
-                    case 1:
-                        cout << endl << "Your Bank balance is: " << user1.getBalance();
-                        getchar();
-                        break;
+				switch (choice)						// switch condition
+				{
+				case 1:							
+					cout << endl << "Your Bank balance is :" << user1.getBalance();
+					// getBalance is ... printing the users	bank balance
+					_getch();
+					break;
 
-                    case 2:
-                        cout << endl << "Enter the amount: ";
-                        cin >> amount;
-                        user1.cashWithDraw(amount);
-                        break;
 
-                    case 3:
-                        cout << endl << "*** User Details are: ***";
-                        cout << endl << "-> Account No: " << user1.getAccountNo();
-                        cout << endl << "-> Name: " << user1.getName();
-                        cout << endl << "-> Balance: " << user1.getBalance();
-                        cout << endl << "-> Mobile No.: " << user1.getMobileNo();
-                        getchar();
-                        break;
+				case 2:								
+					cout << endl << "Enter the amount :";
+					cin >> amount;
+					user1.cashWithDraw(amount);			// calling cashWithdraw function 
+														// passing the withdraw amount 
+					break;
 
-                    case 4:
-                        cout << endl << "Enter Old Mobile No.: ";
-                        cin >> oldMobileNo;
-                        cout << endl << "Enter New Mobile No.: ";
-                        cin >> newMobileNo;
-                        user1.setMobile(oldMobileNo, newMobileNo);
-                        break;
 
-                    case 5:
-                        {
-                            vector<string> transactions = user1.getTransactionHistory();
-                            cout << endl << "*** Transaction History ***";
-                            for (const string& transaction : transactions) {
-                                cout << endl << transaction;
-                            }
-                            getchar();
-                        }
-                        break;
+				case 3:								
+					cout << endl << "*** User Details are :- ";
+					cout << endl << "-> Account no :" << user1.getAccountNo();
+					cout << endl << "-> Name      :" << user1.getName();
+					cout << endl << "-> Balance   :" << user1.getBalance();
+					cout << endl << "-> Mobile No. :" << user1.getMobileNo();
+					// getting and printing user details
+					_getch();
+					break;
 
-                    case 6:
-                        user1.lockAccount();
-                        break;
 
-                    case 7:
-                        exit(0);
+				case 4:								 
+					cout << endl << "Enter Old Mobile No. ";
+					cin >> oldMobileNo;							// take old mobile no
 
-                    default:
-                        cout << endl << "Enter Valid Data !!!";
-                        break;
-                }
+					cout << endl << "Enter New Mobile No. ";
+					cin >> newMobileNo;							// take new mobile no
 
-            } while (true);
+					user1.setMobile(oldMobileNo, newMobileNo);	// now set new mobile no
+					break;
 
-        } else {
-            cout << endl << "User Details are Invalid !!! ";
-            user1.trackPinAttempts();
+					
+				case 5:
+					exit(0);						// exit application
 
-            if (user1.getLockStatus()) {
-                char retryChoice;
-                cout << endl << "Would you like to try again? (y/n): ";
-                cin >> retryChoice;
+				default:							// handle invalid user inputs
+					cout << endl << "Enter Valid Data !!!";
+				}
 
-                if (retryChoice == 'y' || retryChoice == 'Y') {
-                    cout << "Please wait for 30 seconds before retrying..." << endl;
+			} while (1);				  // condition will always TRUE and loop is										capable of running infinite times
+		}
 
-                    // Wait for 30 seconds (using sleep function for Linux)
-                    sleep(30);  // Use Sleep(30000) on Windows instead
-                    user1.unlockAccount();
-                    continue;  // Restart the loop for a new login attempt
-                } else {
-                    cout << "Exiting. Please try again later.";
-                    break;  // Exit the program
-                }
-            }
-            getchar();
-        }
+		else
+		{
+			cout << endl << "User Details are Invalid !!! ";
+			_getch();
+		}
+	} while (1);						// condition will always TRUE and loop is										capable of running infinite times
 
-    } while (true);
-
-    return 0;
+	return 0;
 }
